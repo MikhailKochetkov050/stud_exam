@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<title> Тестирование </title>
+<link href="{% static 'css/web_testing.css' %}" rel="stylesheet" />
+<script type="text/javascript" src={% static "js/web_testing.js" %}></script>
+{% endblock %}
+
+{% block content %}
+<h1 style="margin-left: 10pt;">Тест: {{test_info.test_name}}</h1>
+
+<!-- Display the countdown timer in an element -->
+<p id="timer"></p>
+
+<input type="hidden" id="quest_count" value="{{ test_info.question_count }}">
+<input type="hidden" id="end_time" value="{{ test_info.time }}">
+
+<div class="text-center" style="min-width: 500pt;">
+    <button type="button" class="btn btn-primary" onclick="navigation('first'); page_scroll('first');">
+        &lt;&lt;
+    </button>
+    <button type="button" class="btn btn-primary" onclick="page_scroll('prev_list')">
+        &lt;
+    </button>
+
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+
+        {% with ''|center:test_info.question_count as range %}
+        {% for _ in range %}
+        {% if forloop.counter <= 10 %} <label class="btn btn-primary pages" style="margin: 2pt;"
+            id="{{ forloop.counter }}_label">
+            <input type="radio" name="btn_quest_nums" value="{{ forloop.counter }}_quest"
+                id="{{ forloop.counter }}_quest_btn" autocomplete="off" onclick="page_choosing();">
+            {{ forloop.counter }}
+            </label>
+            {% else %}
+
+            <label class="btn btn-primary pages" style="margin: 2pt;" id="{{ forloop.counter }}_label" hidden>
+                <input type="radio" name="btn_quest_nums" value="{{ forloop.counter }}_quest"
+                    id="{{ forloop.counter }}_quest_btn" hidden autocomplete="off" onclick="page_choosing();">
+                {{ forloop.counter }}
+            </label>
+            {% endif %}
+            {% endfor %}
+            {% endwith %}
+
+
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="page_scroll('next_list')">
+        &gt;
+    </button>
+    <button type="button" class="btn btn-primary" onclick="navigation('last'); page_scroll('last');">
+        &gt;&gt;
+    </button>
+</div>
+
+<input type="hidden" value="First" id="chistiy_costil">
+
+
+<div class="container" style="min-width: 500pt;">
+    <div class="row" style="border:1px solid; border-radius: 10px; margin: 20pt; box-shadow: 10px 10px 60px #555;">
+        {% for q in query %}
+        <input type="hidden" id="{{ forloop.counter }}_ispos" value="{{ q.manychoises }}_{{ q.id }}">
+        <div class="search col-auto" id="{{ forloop.counter }}_quest" style="display:none" name="{{ forloop.counter }}">
+            <h5>Вопрос: {{ forloop.counter }}/{{ test_info.question_count }}</h5>
+            <h3>{{ q.question }}</h3>
+            {% if q.image%}
+            <div>
+                <img src="{{ q.image.url }}" max-height="600pt" max-width="600pt">
+            </div>
+            
+            {% endif %}
+            <p></p>
+
+            {% if q.manychoises %}
+            <div>
+                <div id="{{ forloop.counter }}_shuffle">
+                    <div id="{{ forloop.counter }}_opt1">
+                        <input type="checkbox" name="option1" id="{{ q.id }}_answer1">
+                        <label for="{{ q.id }}_answer1">{{ q.answer1 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt2">
+                        <input type="checkbox" name="option2" id="{{ q.id }}_answer2">
+                        <label for="{{ q.id }}_answer2">{{ q.answer2 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt3">
+                        <input type="checkbox" name="option3" id="{{ q.id }}_answer3">
+                        <label for="{{ q.id }}_answer3">{{ q.answer3 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt4">
+                        <input type="checkbox" name="option4" id="{{ q.id }}_answer4">
+                        <label for="{{ q.id }}_answer4">{{ q.answer4 }}</label>
+                    </div>
+                </div>
+                <div>
+                    <p style="display: none;" id="{{ forloop.counter }}_prompt">
+                        Подсказка: {{ q.prompt|default:"отсутствует" }}
+                    </p>
+
+                </div>
+            </div>
+            {% else %}
+            <div>
+                <div id="{{ forloop.counter }}_shuffle1">
+                    <div id="{{ forloop.counter }}_opt11">
+                        <input type="radio" name="{{ q.id }}_radio" id="{{ q.id }}_answer1" value="1">
+                        <label for="{{ q.id }}_answer1">{{ q.answer1 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt12">
+                        <input type="radio" name="{{ q.id }}_radio" id="{{ q.id }}_answer2" value="2">
+                        <label for="{{ q.id }}_answer2">{{ q.answer2 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt13">
+                        <input type="radio" name="{{ q.id }}_radio" id="{{ q.id }}_answer3" value="3">
+                        <label for="{{ q.id }}_answer3">{{ q.answer3 }}</label>
+                    </div>
+                    <div id="{{ forloop.counter }}_opt14">
+                        <input type="radio" name="{{ q.id }}_radio" id="{{ q.id }}_answer4" value="4">
+                        <label for="{{ q.id }}_answer4">{{ q.answer4 }}</label>
+                    </div>
+                </div>
+                <div style="display: none;" id="{{ forloop.counter }}_prompt">
+                    <p>
+                        Подсказка: {{q.prompt|default:"отсутствует"}}
+                    </p>
+
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if forloop.first %}
+        <script>
+            if (document.getElementById('chistiy_costil').value == "First") {
+                document.getElementById('1_quest').style.display = 'block';
+                $('#1_label').removeClass('btn-primary').addClass('btn-secondary')
+            }
+        </script>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="text-center" style="min-width: 500pt;">
+        <button type="button" class="btn btn-warning" onclick="show_prompt();">
+            Показать подсказку
+        </button>
+        <button type="button" class="btn btn-primary" onclick="navigation('prev'); page_scroll('prev')">
+            Назад
+        </button>
+        <button type="button" class="btn btn-primary" onclick="save_questions()">
+            Сохранить ответ
+        </button>
+        <button type="button" class="btn btn-primary" onclick="navigation('next'); page_scroll('next')">
+            Далее
+        </button>
+
+        <button type="submit" class="btn btn-danger" id="finish" name="finish" value="finish"
+            onclick="finish_button(event);">
+            Завершить тестирование
+        </button>
+        <input type="hidden" value="" id="answer_to_send" name="answer_to_send">
+        <input type="hidden" value="" id="finish_time" name="finish_time">
+
+    </div>
+</form>
+
+{% endblock %}

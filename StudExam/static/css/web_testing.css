@@ -1,0 +1,14 @@
+.starting {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    box-shadow: 10px 10px 60px #555;
+    /* width: auto; */
+    max-width: 500px;
+    min-width: 450px;
+    height: auto;  
+    min-height: 250px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

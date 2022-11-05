@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+
+{% block head %}
+<title> Результаты по студенту </title>
+<link href="{% static 'css/attempt_result.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="text-right">
+        <button type="submit" name="back" id="back" value="back" class="btn btn-link mb-4">Назад</button>
+    </div>
+</form>
+<h1 style="text-align: center; color: blue; margin: 20pt;">Тест: {{ test_info.test_name }}</h1>
+<h5 style="text-align: center;">Данные о студенте:</h5> 
+<p style="text-align: center;">{{ reg_user.full_name }} ({{ reg_user.username }})</p>
+
+<p style="margin: 20pt;"></p>
+
+<table style="margin: auto; min-width: 500pt;">
+    <tr style="text-align: center;">
+        <th>№ попытки</th>
+        <th>Дата прохождения</th>
+        <th>Затраченное время (мин)</th>
+        <th>Результат</th>
+        <th style="border: none;"></th>
+    </tr>
+    {% for attempt, res in attempts %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+            {% timezone 'Europe/Moscow' %}
+            {{ attempt.date }}
+            {% endtimezone %}
+        </td>
+        <td>{{ attempt.time }}</td>
+        <td>{{ res }}%</td>
+        <td style="border: none;">
+            <form action="." method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="info">
+                <input type="hidden" name="more_info" value="{{ attempt.id }}">
+                <button type="submit" class="btn btn-primary">Подробнее</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

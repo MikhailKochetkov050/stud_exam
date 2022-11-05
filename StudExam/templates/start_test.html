@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<title> Тестирование </title>
+<link href="{% static 'css/web_testing.css' %}" rel="stylesheet" />
+<script type="text/javascript" src={% static "js/web_testing.js" %}></script>
+{% endblock %}
+
+{% block content %}
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="starting">
+        <h2 style="padding: 10pt 0pt 20pt 0pt">{{ item.test_name }}</h2>
+        <table width=100% cellpadding=5pt>
+            <tr>
+                <th>
+                    Общее количество попыток:
+                </th>
+                <td width=25%>
+                    {{ item.attempt_count }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Оставшееся количество попыток:
+                </th>
+                <td width=25%>
+                    {{ student }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Время на прохождение:
+                </th>
+                <td>
+                    {{ item.time }} мин.
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Количество вопросов в тесте:
+                </th>
+                <td>
+                    {{ item.question_count }}
+                </td>
+            </tr>
+
+        </table>
+        <br>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary" style="margin: 10pt;" name="start_test" value="start_test">
+                Начать тестирование
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

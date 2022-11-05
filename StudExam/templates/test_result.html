@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<title> Результаты по тесту </title>
+<link href="{% static 'css/attempt_result.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="text-right">
+        <button type="submit" name="back" id="back" value="back" class="btn btn-link mb-4">Назад</button>
+    </div>
+</form>
+
+<!-- — название теста;
+— таблица с результатами со следующими колонками: № п/п, логин студента, ФИО студента, количество использованных попыток, лучший результат.
+— рядом с каждой строкой таблицы располагается кнопка «Подробнее». -->
+
+<h1 style="text-align: center; color: blue; margin: 20pt;">Тест: {{ test_info.test_name }}</h1>
+<h4 style="text-align: center;">Студенты, прошедшие тест</h4>
+<p style="margin: 20pt;"></p>
+
+<table style="margin: auto; min-width: 500pt;">
+    <tr style="text-align: center;">
+        <th>№ п/п</th>
+        <th>Логин студента</th>
+        <th>ФИО студента</th>
+        <th>Количество попыток</th>
+        <th>Лучший результат</th>
+        <th style="border: none;"></th>
+    </tr>
+    {% for reg_user, test in reg_users %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ reg_user.username }}</td>
+        <td>{{ reg_user.full_name }}</td>
+        <td>{{ test.attempts_count }}</td>
+        <td>{{ test.best_result }}</td>
+        <td style="border: none;">
+            <form action="." method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="info">
+                <input type="hidden" name="more_info" value="{{ reg_user.id }}">
+                <button type="submit" class="btn btn-primary">Подробнее</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

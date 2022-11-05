@@ -1,0 +1,22 @@
+.container {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    overflow: auto;
+    width: auto;
+    max-width: 500px;
+    min-width: 350px;
+    margin: auto;
+    height: auto;  
+    min-height: 250px;
+    box-shadow: 10px 10px 60px #555;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tabs {
+    padding: 10px 5%;
+    margin: 8% 0;
+}

@@ -1,0 +1,44 @@
+"""StudExam URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/3.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+from TestSystem import views
+from TestCreation import views as views1
+from WebTesting import views as views2
+from Results import views as views3
+from Profiles import views as views4
+
+urlpatterns = [
+    path('', views.index, name='home'),
+    # path('sign_in/', views.sign_in, name='sign_in'),
+    path('demo/', views.demo, name='demo'),
+    path('logout/', views.logout_view, name='logout'),
+    path('create_test/', views1.create_test, name='create_test'),
+    path('web_testing/', views2.web_testing, name='web_testing'),
+    path('attempt_result/', views3.attempt_result, name='attempt_result'),
+    path('student_result/', views3.student_result, name='student_result'),
+    path('test_result/', views3.test_result, name='test_result'),
+    path('profile/', views4.profile, name='profile'),
+    path('admin_panel/', views.admin_panel, name='admin_panel'),
+    path('admin/', admin.site.urls),
+]
+
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,31 @@
+.container {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    width: auto;
+    max-width: 500px;
+    min-width: 400px;
+    margin: auto;
+    height: 90%;  
+    min-height: 350px;  
+    box-shadow: 10px 10px 60px #555;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+}
+
+.tabs {
+    padding: 10px 5%;
+    margin: 8% 0;
+}
+
+/* Style buttons */
+.btn_delete {
+    background-color:white; /* Blue background */
+    border: none; /* Remove borders */
+    color:red; /* White text */
+    font-size: 30px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+

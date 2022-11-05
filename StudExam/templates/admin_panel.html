@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<title> Admin Panel </title>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+    rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+<link href="{% static 'css/admin_panel.css' %}" rel="stylesheet" />
+<script type="text/javascript" src={% static "js/admin_panel.js" %}></script>
+{% endblock %}
+
+{% block content %}
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message | safe }}
+</div>
+{% endfor %}
+<div class="container">
+    <div class="text-right mb-4">
+        <button type="button" class="btn btn-link mb-4"></button>
+    </div>
+    <button type="button" class="btn btn-primary btn-block tabs mt-4" data-toggle="modal" data-target="#admin1">Сменить
+        пароль администратора</button>
+    <button type="button" class="btn btn-primary btn-block tabs" data-toggle="modal" data-target="#admin2">Создать
+        учетную запись</button>
+    <button type="button" class="btn btn-primary btn-block tabs" data-toggle="modal" data-target="#admin3">Изменить
+        учетную запись</button>
+</div>
+
+<div>
+    <!-- HTML-код модального окна смены пароля администратора-->
+    <div class="modal fade" id="admin1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Смена пароля администратора</h4>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+
+                    <table>
+                        <tr>
+                            <th><label for="admin_pwd">Старый пароль:</label></th>
+                            <td><input type="password" name="admin_pwd" id="admin_pwd" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="new_admin_pwd">Новый пароль:</label></th>
+                            <td><input type="password" name="new_admin_pwd" id="new_admin_pwd" required></td>
+                        </tr>
+                    </table>
+
+                    <!-- Футер модального окна -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" name="admin_pass" value="admin_pass"
+                            id="admin_pass">Сохранить</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <!-- HTML-код модального окна создания нового пользователя-->
+    <div class="modal fade" id="admin2">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="." method="post"> {% csrf_token %}
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Создание учетной записи</h4>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <table>
+                            {{ form.as_table }}
+                            <tr>
+                                <th><label for="pwd">Пароль:</label></th>
+                                <td><input type="text" name="pwd" id="pwd" disabled required></td>
+                            </tr>
+                        </table>
+
+                        <input type="text" name="ans" id="ans" hidden value={{ans}}>
+                        <p></p>
+                        <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="font-size: 13pt;" disabled id='btn2'
+                            onclick=LoginGeneration()>
+                            Генерировать логин
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-lg btn-block" style="font-size: 13pt;" disabled id='btn1'
+                            onclick="PwdGeneration('pwd');PwdGeneration('hidden_pwd')">
+                            Генерировать пароль
+                        </button>
+
+
+                    </div>
+                    <!-- Футер модального окна -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Сохранить учетную запись</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <!-- HTML-код модального окна изменения учетной записи пользователя-->
+    <div class="modal fade" id="admin3">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="." method="post">
+                    <!-- Заголовок модального окна -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Изменение учетных данных</h4>
+                    </div>
+                    <!-- Основное содержимое модального окна -->
+                    <div class="modal-body">
+
+                        {% csrf_token %}
+                        <table>
+                            <tr>
+                                <th><label for="choose_user" class="font-weight-bold">Выбор пользователя</label></th>
+                                <td>
+                                    <select name="choose_user" required onchange="SwitchChange(value);">
+                                        <option>--Выберите имя пользователя--</option>
+                                        {% for o in options %}
+                                        <option value={{o.locked}}+{{o.username}}> {{ o.username }} </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            {{ form1 }}
+                        </table>
+                        <p></p>
+
+
+                        <button type="button" id='btn3' class="btn btn-outline-primary" disabled
+                            onclick="PwdGeneration('cng_pwd')">
+                            Сгенерировать новый пароль
+                        </button>
+                        <p></p>
+                        <div class="form-check pl-0">
+                            <label for="stackedCheck1" class="form-check-label">Состояние учётной записи</label>
+                            <input id="stackedCheck1" class="form-check-input" type="checkbox" disabled
+                                data-toggle="toggle" data-on="Разблокирован" data-off="Заблокирован" data-width="255" onchange="changed_status()">
+                        </div>
+                        <input type="hidden" id="status_change" name="status_change">
+                    </div>
+                    <!-- Футер модального окна -->
+                    <div class="modal-footer">
+                        <button type="submit" id='btn4' name='btn4' value='btn4' class="btn btn-danger btn-lg btn-block"
+                            style="font-size: 13pt;" disabled onclick="DeleteConfirm(event)">Удалить пользователя</button>
+                        <button type="submit" id='btn5' name='btn5' value='btn5'
+                            style="font-size: 13pt;" class="btn btn-primary btn-lg btn-block" disabled>Сохранить изменения</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

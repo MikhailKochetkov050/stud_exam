@@ -1,0 +1,111 @@
+* {
+    border: 0;
+    padding: 0px;
+    margin: 0px;
+  }
+
+.background {
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,1);
+
+    position: fixed;
+    top: 0px;
+    left: 0px;
+
+} 
+
+.grey_top {
+    width: 100%;
+    height: 180px;
+    background: rgba(237,237,237,1);
+    opacity: 0.5;
+
+    top: 0px;
+    left: 0px;
+
+}
+
+/* Рисование логотипа */
+.logo {
+    width: 132px;
+    height: 122px;
+    left: 50%;
+    top: 15px;
+    transform: translateX(-50%);
+    background: rgba(246 246 246, 1);
+    position: relative;
+}
+    .logo_1 {
+        width: 132px;
+        height: 99px;
+        background: rgba(22,100,192,1);
+        opacity: 1;
+        position: absolute;
+        top: 22px;
+        left: 0px;
+    }
+    .logo_2 {
+        width: 132px;
+        height: 21px;
+        background: rgba(0,60,143,1);
+        opacity: 1;
+        position: absolute;
+        top: 100px;
+        left: 0px;
+    }
+    .logo_3 {
+        width: 88px;
+        height: 100px;
+        background: rgba(207,234,255,1);
+        opacity: 1;
+        position: absolute;
+        top: 0px;
+        left: 21px;
+    }
+    .logo_4 {
+        width: 88px;
+        height: 21px;
+        background: rgba(94,146,243,1);
+        opacity: 1;
+        position: absolute;
+        top: 100px;
+        left: 21px;
+    }
+    .logo_5 {
+        width: 73px;
+        height: 11px;
+        background: rgba(114,150,178,1);
+        opacity: 1;
+        position: absolute;
+        top: 34px;
+        left: 47px;
+    }
+    .logo_6 {
+        width: 26px;
+        height: 11px;
+        background: rgba(114,150,178,1);
+        opacity: 1;
+        position: absolute;
+        top: 60px;
+        left: 47px;
+    }
+
+.studexam {
+    width: 380px;
+    color: rgba(0,0,0,1);
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Roboto Mono;
+    font-weight: bold;
+    font-size: 24px;
+    opacity: 1;
+    text-align: center;
+}
+
+.container {
+    height: 100%;
+}
+

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+
+{% block head %}
+<title> Профиль </title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="{% static 'css/attempt_result.css' %}" rel="stylesheet" />
+<link href="{% static 'css/create_test.css' %}" rel="stylesheet" />
+<script type="text/javascript" src={% static "js/profile.js" %}></script>
+{% endblock %}
+
+{% block content %}
+<!-- — указание ФИО и логина пользователя (Ильнур);
+— поле ввода ID теста с рядом стоящей кнопкой «Начать тестирование»;
+— перечень пройденных тестов в табличном формате. Содержит в себе следующие столбцы: № п/п, ID теста, дата прохождения теста, название теста, результат, количество попыток;
+— рядом с каждой строкой таблицы располагается кнопка «Подробнее»;
+— кнопка «Выход» для выхода из системы. (Ильнур) -->
+
+{% if error %}
+<div class="alert alert-danger" role="alert" id="hiding"
+    style="width: 50%; margin-left: 50%; margin-top: 10pt;">
+    {{ error }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="hide_it()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="text-right">
+        <input type="text" placeholder="ID теста" name="test_id" class="form-control mr-4" required
+            style="width: 100pt; display: inline;">
+        <button type="submit" name="test" id="test" value="test" class="btn btn-primary m-4">Начать
+            тестирование</button>
+    </div>
+</form>
+<!-- 
+<p>{{ reg_user.username }}</p>
+<p>{{ reg_user.full_name }}</p> -->
+
+<h4 style="text-align: center;">Перечень пройденных тестов</h4>
+<p style="margin: 20pt;"></p>
+
+
+<table style="margin: auto; min-width: 500pt;">
+    <tr style="text-align: center;">
+        <th>№ теста</th>
+        <th>ID теста</th>
+        <th>Дата последнего прохождения теста</th>
+        <th>Название теста</th>
+        <th>Лучший результат</th>
+        <th>Количество использованных попыток</th>
+        <th style="border: none;"></th>
+    </tr>
+    {% for test, test_info, attempt in tests %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ test.test_id }}</td>
+        <td>
+            {% timezone 'Europe/Moscow' %}
+            {{ attempt.date }}
+            {% endtimezone %}
+        </td>
+        <td>{{ test_info.test_name }}</td>
+        <td>{{ test.best_result }}%</td>
+        <td>{{ test.attempts_count }}/{{test_info.attempt_count}}</td>
+        <td style="border: none;">
+            <form action="." method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="info">
+                <input type="hidden" name="more_info" value="{{ test.test_id }}">
+                <button type="submit" class="btn btn-primary">Подробнее</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

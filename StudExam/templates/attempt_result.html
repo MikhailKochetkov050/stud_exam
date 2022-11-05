@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+
+{% block head %}
+<title> Результаты тестирования </title>
+<link href="{% static 'css/attempt_result.css' %}" rel="stylesheet" />
+<!-- <script type="text/javascript" src={% static "js/attempt_result.js" %}></script> -->
+{% endblock %}
+
+{% block content %}
+<form action="." method="post">
+    {% csrf_token %}
+    <div class="text-right">
+        <button type="submit" name="back" id="back" value="back" class="btn btn-link mb-4">Назад</button>
+    </div>
+</form>
+<h1 style="text-align: center; color: blue; margin: 20pt;">Тест: {{ test_info.test_name }}</h1>
+<h5 style="text-align: center;">Данные о студенте:</h5> 
+<p style="text-align: center;">{{ reg_user.full_name }} ({{ reg_user.username }})</p>
+<p style="margin: 20pt;"></p>
+<table style="margin: auto; min-width: 500pt; width: 90%; border-spacing: 20px 5px; color:blue;">
+    <tr>
+        <td>
+            Номер попытки:<br>{{attempt_info.attempt_number }}
+        </td>
+        <td>
+            Дата прохождения:<br>
+            {% timezone 'Europe/Moscow' %}
+            {{ attempt_info.date }}
+            {% endtimezone %}
+        </td>
+        <td>
+            Затраченное время:<br>{{ attempt_info.time }} мин
+        </td>
+        <td>
+            Результат:<br>{{ res }}%
+        </td>
+    </tr>
+</table>
+<p style="margin: 20pt;"></p>
+
+<table style="margin: auto; min-width: 500pt;">
+    <tr style="text-align: center;">
+        <th>№ вопроса</th>
+        <th>Вопрос</th>
+        <th>Ответ</th>
+    </tr>
+    {% for q, ans in zipping %}
+    {% if ans.iscorrect %}
+    <tr style="background: lawngreen;">
+        {% else %}
+    <tr style="background:red">
+        {% endif %}
+        <td>{{ forloop.counter }}</td>
+        <td>{{ q.question }}</td>
+        <td>
+            {% if ans.choosen_answer1 %}
+            {{ q.answer1 }}<br>
+            {% endif %}
+            {% if ans.choosen_answer2 %}
+            {{ q.answer2 }}<br>
+            {% endif %}
+            {% if ans.choosen_answer3 %}
+            {{ q.answer3 }}<br>
+            {% endif %}
+            {% if ans.choosen_answer4 %}
+            {{ q.answer4 }}<br>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
