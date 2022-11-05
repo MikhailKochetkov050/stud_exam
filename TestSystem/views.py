@@ -11,12 +11,9 @@ from django.contrib.auth.models import Group, Permission
 import re
 from django.contrib import messages
 
-
 from .forms import SignUpForm, ChangeForm, UserLoginForm
 from .models import SignUp_Model
 
-def demo(request):
-    return render(request, 'demo.html')
 
 def index(request):
     form = UserLoginForm(request.POST or None)
@@ -25,7 +22,7 @@ def index(request):
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password')
         user = authenticate(username=username, password=password)
-        login(request, user)            
+        login(request, user)
         request.session['user_id'] = user.id
         _next = _next or '/'
         if request.user.is_superuser:
@@ -33,6 +30,7 @@ def index(request):
         return redirect('/profile/')
 
     return render(request, 'sign_in.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)
@@ -42,9 +40,10 @@ def logout_view(request):
         del request.session['test_id']
     if 'passed_test_id' in request.session:
         del request.session['passed_test_id']
-    if 'attempt_id'  in request.session:
+    if 'attempt_id' in request.session:
         del request.session['attempt_id']
     return redirect('/')
+
 
 @login_required(login_url='/')
 @user_passes_test(lambda u: u.is_superuser, login_url='/profile/')
@@ -66,7 +65,7 @@ def admin_panel(request):
                 user.groups.add(Group.objects.get(name='students'))
             elif username.split('_')[0] == 'teacher':
                 new_group, created = Group.objects.get_or_create(name='teachers')
-                user.groups.add(Group.objects.get(name='teachers'))            
+                user.groups.add(Group.objects.get(name='teachers'))
 
             return redirect('/admin_panel/')
 
@@ -76,7 +75,7 @@ def admin_panel(request):
             password = request.POST.get('password')
             status = request.POST.get('status_change')
             print(status, type(status))
-            status = not(eval(status.capitalize()))
+            status = not (eval(status.capitalize()))
             u = User.objects.get(username=username)
             changed_user = SignUp_Model.objects.get(username=username)
             if password != '':
@@ -84,12 +83,12 @@ def admin_panel(request):
             if changed_user.locked != status:
                 changed_user.locked = status
                 if not status:
-                    changed_user.login_attempts=0
+                    changed_user.login_attempts = 0
             changed_user.save()
             u.save()
 
             return redirect('/admin_panel/')
-        
+
         # Удаление пользователя
         elif request.POST.get('btn4'):
             username = request.POST.get('username')
@@ -115,8 +114,6 @@ def admin_panel(request):
                 error = "Старый пароль не совпадает с существующим!"
                 messages.error(request, "Старый пароль не совпадает с существующим!")
 
-
-
             return render(request, 'admin_panel.html', {})
 
         else:
@@ -133,8 +130,8 @@ def admin_panel(request):
         form = SignUpForm()
         form1 = ChangeForm()
     return render(request, 'admin_panel.html', {
-        'form': form, 
+        'form': form,
         'ans': ans,
         'form1': form1,
         'options': options,
-        })
+    })
